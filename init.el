@@ -6,15 +6,15 @@
 (package-initialize)
 
 ;; line number
-;; (setq linum-format "%4d")
-;;(defun my-linum-mode-hook ()
-;; (linum-mode t))
-;;(add-hook 'find-file-hook 'my-linum-mode-hook)
+(setq linum-format "%4d")
+(defun my-linum-mode-hook ()
+  (linum-mode t))
+(add-hook 'find-file-hook 'my-linum-mode-hook)
 
 (add-to-list 'default-frame-alist
              '(font . "Fira Code 14"))
 
-(mac-auto-operator-composition-mode)
+;; (mac-auto-operator-composition-mode)
 
 ;; scroll one line at a time (less "jumpy" than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))) ;; one line at a time
@@ -51,7 +51,7 @@
 
 (require 'helm)
 (require 'helm-config)
-(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-x") #'helm-M-x)
 ;; ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
@@ -61,6 +61,7 @@
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
+(global-set-key (kbd "C-c p s a") 'helm-projectile-ack)
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
       helm-move-to-line-cycle-in-source     nil ; move to end or beginning of source when reaching top or bottom of source.
@@ -77,7 +78,7 @@
 (global-set-key (kbd "C-x b") 'helm-mini)
 (setq helm-buffers-fuzzy-matching t
       helm-recentf-fuzzy-match    t)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key (kbd "C-c h o") 'helm-occur)
 
 (setq helm-split-window-in-side-p t)
@@ -314,16 +315,24 @@ Non-interactive arguments are Begin End Regexp"
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/emacs-color-theme-solarized/")
 (load-file "~/.emacs.d/themes/color-theme-tomorrow.el")
 (setq custom-safe-themes t)
-(load-theme 'monokai t)
+
+;; (add-hook 'after-make-frame-functions
+;;           (lambda (frame)
+;;             (let ((mode (if (display-graphic-p frame) 'light 'dark)))
+;;               (set-frame-parameter frame 'background-mode mode)
+;;               (set-terminal-parameter frame 'background-mode mode))
+;;             (enable-theme 'solarized)))
+(set-terminal-parameter nil 'background-mode 'light)
+(load-theme 'solarized t)
 
 ;; highlight column: col-highlight
 
 ;; auto indent mode
-;; (setq auto-indent-on-visit-file t)
+(setq auto-indent-on-visit-file t)
 ;; If you want auto-indent on for files
-;; (require 'auto-indent-mode)
-;; (auto-indent-global-mode)
-;; (setq auto-indent-assign-indent-level 2)
+(require 'auto-indent-mode)
+(auto-indent-global-mode)
+(setq auto-indent-assign-indent-level 2)
 
 (defun my-setup-indent (n)
   ;; java/c/c++
@@ -386,8 +395,9 @@ Non-interactive arguments are Begin End Regexp"
  '(css-indent-level 2)
  '(custom-safe-themes
    (quote
-    ("a800120841da457aa2f86b98fb9fd8df8ba682cebde033d7dbf8077c1b7d677a" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "fe230d2861a13bb969b5cdf45df1396385250cc0b7933b8ab9a2f9339b455f5c" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" default)))
+    ("427fed191e7a766152e59ef0e2904283f436dbbe259b9ccc04989f3acde50a55" "a800120841da457aa2f86b98fb9fd8df8ba682cebde033d7dbf8077c1b7d677a" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "5ee12d8250b0952deefc88814cf0672327d7ee70b16344372db9460e9a0e3ffc" "7f1263c969f04a8e58f9441f4ba4d7fb1302243355cb9faecb55aec878a06ee9" "cf08ae4c26cacce2eebff39d129ea0a21c9d7bf70ea9b945588c1c66392578d1" "fe230d2861a13bb969b5cdf45df1396385250cc0b7933b8ab9a2f9339b455f5c" "1157a4055504672be1df1232bed784ba575c60ab44d8e6c7b3800ae76b42f8bd" default)))
  '(fci-rule-color "#20240E")
+ '(frame-background-mode (quote dark))
  '(fringe-mode (quote (0)) nil (fringe))
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
@@ -407,7 +417,7 @@ Non-interactive arguments are Begin End Regexp"
  '(magit-rebase-arguments nil)
  '(package-selected-packages
    (quote
-    (auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ag ack ace-jump-mode 0blayout)))
+    (auto-indent-mode auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ag ack ace-jump-mode 0blayout)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(scroll-bar-mode nil)
@@ -527,6 +537,10 @@ Non-interactive arguments are Begin End Regexp"
 
 ;; emmet
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'js-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'js2-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'jsx-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+(add-hook 'js2-jsx-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent 2 spaces.
 (setq emmet-move-cursor-between-quotes t) ;; default nil
@@ -536,3 +550,26 @@ Non-interactive arguments are Begin End Regexp"
 
 (desktop-save-mode 1)
 (global-set-key (kbd "M-s") 'save-buffer)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; open new line and indent
+(defun wh/open-line-below ()
+  "Open a line below the current one (like vim's 'o')."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+(defun wh/open-line-above ()
+  "Open a line above the current one (like vim's 'O')."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (previous-line)
+  (indent-for-tab-command))
+(global-set-key (kbd "<S-return>") 'wh/open-line-below)
+(global-set-key (kbd "<C-S-return>") 'wh/open-line-above)
