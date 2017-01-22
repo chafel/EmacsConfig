@@ -12,7 +12,10 @@
 (add-hook 'find-file-hook 'my-linum-mode-hook)
 
 (add-to-list 'default-frame-alist
-             '(font . "Fira Code 14"))
+             '(font . "Fira Code 16"))
+
+;; remap close key
+(global-set-key (kbd "C-x C-c")      'keyboard-escape-quit)
 
 ;; (mac-auto-operator-composition-mode)
 
@@ -22,8 +25,8 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-(setq auto-save-interval 6000)
-(setq auto-save-timeout 3600)
+(setq auto-save-interval 2000)
+(setq auto-save-timeout 1200)
 
 (add-to-list 'load-path "~/.emacs.d/site-lisp/magit/lisp")
 (require 'magit)
@@ -59,9 +62,9 @@
 ;; (global-unset-key (kbd "C-x c"))
 
 (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+;; (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-(global-set-key (kbd "C-c p s a") 'helm-projectile-ack)
+;; (global-set-key (kbd "C-c p s a") 'helm-projectile-ack)
 
 (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
       helm-move-to-line-cycle-in-source     nil ; move to end or beginning of source when reaching top or bottom of source.
@@ -92,14 +95,13 @@
 (load "~/.emacs.d/helm-swoop/helm-swoop")
 
 (require 'helm-projectile)
-(helm-projectile-on)
 
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
-(setq projectile-switch-project-action 'helm-projectile-find-file)
+;; (setq projectile-switch-project-action 'helm-projectile-find-file)
 (setq projectile-switch-project-action 'helm-projectile)
-(setq projectile-enable-caching t)
+;; (setq projectile-enable-caching t)
 
 (require 'smartparens-config)
 (add-hook 'js-mode-hook #'smartparens-mode)
@@ -167,7 +169,11 @@
 (load "~/.emacs.d/less-css-mode/less-css-mode")
 
 ;; acejump
-(global-set-key (kbd "M-j") 'ace-jump-mode)
+(global-set-key (kbd "C-x j") 'ace-jump-mode)
+(global-set-key (kbd "C-x c") 'ace-jump-char-mode)
+
+;; ace-window
+(global-set-key (kbd "M-p") 'ace-window)
 
 ;; helm-swoop
 (require 'helm-swoop)
@@ -323,7 +329,8 @@ Non-interactive arguments are Begin End Regexp"
 ;;               (set-terminal-parameter frame 'background-mode mode))
 ;;             (enable-theme 'solarized)))
 (set-terminal-parameter nil 'background-mode 'light)
-(load-theme 'solarized t)
+;; (load-theme 'solarized t)
+(load-theme 'monokai t)
 
 ;; highlight column: col-highlight
 
@@ -340,6 +347,8 @@ Non-interactive arguments are Begin End Regexp"
   ;; web development
   (setq coffee-tab-width n) ; coffeescript
   (setq javascript-indent-level n) ; javascript-mode
+  (setq js2-indent-switch-body t)
+  (setq js-switch-indent-offset 2)
   (setq js-indent-level n) ; js-mode
   (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
   (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
@@ -417,7 +426,7 @@ Non-interactive arguments are Begin End Regexp"
  '(magit-rebase-arguments nil)
  '(package-selected-packages
    (quote
-    (auto-indent-mode auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ag ack ace-jump-mode 0blayout)))
+    (smart-comment ace-window auto-indent-mode auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ace-jump-mode 0blayout)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(scroll-bar-mode nil)
@@ -548,7 +557,31 @@ Non-interactive arguments are Begin End Regexp"
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook 'rainbow-identifiers-mode)
 
-(desktop-save-mode 1)
+;; (require 'desktop)
+;; (desktop-save-mode 1)
+;; (setq history-length 50)
+;; (setq desktop-auto-save-timeout 3600)
+;; (add-to-list 'desktop-globals-to-save 'file-name-history)
+;; (setq desktop-buffers-not-to-save
+;;       (concat "\\("
+;;               "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+;;               "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+;;               "\\)$"))
+;; (add-to-list 'desktop-modes-not-to-save 'dired-mode)
+;; (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+;; (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+;; (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+;; ;;; desktop-override-stale-locks.el begins here
+;; (defun emacs-process-p (pid)
+;;   "If pid is the process ID of an emacs process, return t, else nil.
+;; Also returns nil if pid is nil."
+;;   (when pid
+;;     (let ((attributes (process-attributes pid)) (cmd))
+;;       (dolist (attr attributes)
+;;         (if (string= "comm" (car attr))
+;;             (setq cmd (cdr attr))))
+;;       (if (and cmd (or (string= "emacs" cmd) (string= "emacs.exe" cmd))) t))))
+
 (global-set-key (kbd "M-s") 'save-buffer)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
