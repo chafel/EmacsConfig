@@ -43,7 +43,7 @@
 ;; (autoload 'tern-mode "tern.el" nil t)
 ;; (add-hook 'js-mood-hook (lambda () (tern-mode t)))
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-jsx-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
 (require 'multiple-cursors)
 (global-set-key (kbd "C-x C-d") 'mc/edit-lines)
@@ -335,11 +335,11 @@ Non-interactive arguments are Begin End Regexp"
 ;; highlight column: col-highlight
 
 ;; auto indent mode
-(setq auto-indent-on-visit-file t)
-;; If you want auto-indent on for files
-(require 'auto-indent-mode)
-(auto-indent-global-mode)
-(setq auto-indent-assign-indent-level 2)
+;; (setq auto-indent-on-visit-file t)
+;; ;; If you want auto-indent on for files
+;; (require 'auto-indent-mode)
+;; (auto-indent-global-mode)
+;; (setq auto-indent-assign-indent-level 2)
 
 (defun my-setup-indent (n)
   ;; java/c/c++
@@ -420,13 +420,14 @@ Non-interactive arguments are Begin End Regexp"
      ("#F309DF" . 85)
      ("#20240E" . 100))))
  '(js-indent-level 2)
- '(magit-diff-arguments (quote ("--no-ext-diff" "--stat")))
+ '(js2-strict-trailing-comma-warning nil)
+ '(magit-diff-arguments (quote ("--no-ext-diff")))
  '(magit-diff-use-overlays nil)
  '(magit-log-section-arguments (quote ("--decorate" "-n256")))
  '(magit-rebase-arguments nil)
  '(package-selected-packages
    (quote
-    (smart-comment ace-window auto-indent-mode auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ace-jump-mode 0blayout)))
+    (rjsx-mode markdown-preview-eww smart-comment ace-window auto-indent-mode auto-complete rainbow-delimiters rainbow-identifiers use-package smartparens project-explorer paredit multiple-cursors monokai-theme magit key-chord js2-mode ido-ubiquitous highlight-parentheses helm-projectile helm-ag git-gutter expand-region emmet-mode dracula-theme col-highlight coffee-mode aggressive-indent ace-jump-mode 0blayout)))
  '(pos-tip-background-color "#A6E22E")
  '(pos-tip-foreground-color "#272822")
  '(scroll-bar-mode nil)
@@ -588,7 +589,7 @@ Non-interactive arguments are Begin End Regexp"
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(js2-warning ((t (:underline "orange2")))))
 
 ;; open new line and indent
 (defun wh/open-line-below ()
